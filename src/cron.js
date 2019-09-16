@@ -99,7 +99,7 @@ updateAllNotices();
 
 function start() {
 
-    cron.schedule('* */5 * * * *', () => {
+    cron.schedule('* */10 * * * *', () => {
         updateAllNotices
     });
 
