@@ -94,7 +94,6 @@ async function updateAllNotices() {
     snapshot.forEach(async doc => {
         const docRef = doc.ref;
         const board = doc.data();
-        console.log(board.name, board.latestCrawledURL);
         const notices = await crawl_notices_2019(board);
 
         notices.forEach(notice =>
