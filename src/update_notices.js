@@ -1,4 +1,3 @@
-const cron = require('node-cron');
 const axios = require('axios');
 const cheerio = require('cheerio');
 const firebase = require('firebase-admin');
@@ -20,6 +19,8 @@ function getBaseURL(URL) {
     return URL.slice(0, URL.indexOf('/', startIndex));
 }
 
+// board 정보를 받아 HTTP 콜을 하여 HTML을 얻은 후 공지사항만 파싱해냅니다.
+// 반환형은 []Notice 입니다.
 async function crawl_notices_2019(board) {
     const URL = board.URL;
     const { data } = await axios.get(URL);
@@ -86,47 +87,44 @@ async function crawl_notices_2019(board) {
     return notices;
 }
 
-// Firebase에서 NoticeBoard 목록을 가져와
-// 이를 기반으로 업데이트 합니다.
-async function updateAllNotices() {
+// Firebase에서 NoticeBoard 목록을 가져와 이를 기반으로 공지사항을 크롤링합니다.
+// fetchAllNotices()면 업데이트는 하지 않고,
+// fetchAllNotices({ update: true })까지 하면 firebaes에 반영하여 업데이트합니다.
+async function fetchAllNotices(options = { update: false }) {
     const snapshot = await boardRef.get();
 
     snapshot.forEach(async doc => {
+        // 여기부터는 board 단위 작업입니다.
         const docRef = doc.ref;
         const board = doc.data();
         const notices = await crawl_notices_2019(board);
-
-        notices.forEach(notice =>
-            noticeRef.add({
-                ...notice,
-                writtenAt: firebase.firestore.Timestamp.fromDate(
-                    new Date(notice.writtenAt)
-                ),
-                crawledAt: firebase.firestore.FieldValue.serverTimestamp(),
-            })
-        );
 
         const updateLog = {
             lastUpdatedAt: firebase.firestore.FieldValue.serverTimestamp(),
             lastUpdateCount: notices.length,
             latestCrawledURL:
-                notices.length > 0
-                    ? notices[notices.length - 1].URL
-                    : board.latestCrawledURL,
+                notices.length > 0 ? notices[0].URL : board.latestCrawledURL,
         };
 
+        if (!options.update) return;
+
+        // 공지사항 추가 작업을 writeBatch에 모았다가 한번에 커밋합니다.
+        let writeBatch = db.batch();
+
+        notices.forEach(notice => {
+            let documentRef = noticeRef.doc();
+            writeBatch.create(documentRef, {
+                ...notice,
+                crawledAt: firebase.firestore.FieldValue.serverTimestamp(),
+                writtenAt: firebase.firestore.Timestamp.fromDate(
+                    new Date(notice.writtenAt)
+                ),
+            });
+        });
+
+        writeBatch.commit();
         docRef.update(updateLog);
     });
 }
 
-function start() {
-    process.setMaxListeners(0);
-    console.log('updateAllNotice scheduled.');
-
-    cron.schedule('* */10 * * * *', () => {
-        console.log('Update!', Date.now().toLocaleString());
-        updateAllNotices();
-    });
-}
-
-module.exports = start;
+module.exports = { fetchAllNotices };
