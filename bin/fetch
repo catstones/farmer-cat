@@ -1,0 +1,6 @@
+#!/usr/bin/env node
+const { fetch } = require('../src')
+const boards = require('../src/boards.json')
+
+fetch(boards)
+

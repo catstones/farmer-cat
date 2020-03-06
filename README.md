@@ -1,31 +1,31 @@
-# Farmer Cat
+# famer-cat
 
-가톨릭대학교 공지사항 크롤링 서비스입니다.
+가톨릭대학교 공지사항을 스크랩하여 Firecloud에 저장합니다.
 
-*CUKCAT* firebase에서 공지사항 게시판 목록을 받아와 크롤링합니다.
+## 문서 스키마
 
-## 설치
+### 게시판
 
-Node가 깔린 서버에 설치합니다.
+`/boards`에 다음과 같은 구조로 저장됩니다.
 
-```
-$ git clone https://github.com/catstones/farmer_cat
-$ npm install --production
-```
+- 문서 ID: 자동
+- title: 게시판 제목
+- url: 크롤링 타겟 url
+- type: 크롤링 타입
 
-`config` 디렉토리에 firebase 인증 파일을 넣고 패스에 등록합니다.
+### 공지
 
-```
-export GOOGLE_APPLICATION_CREDENTIALS="config/firebaseAccountKey.json"
-```
+`/notices`에 다음과 같은 구조로 저장됩니다.
 
-pm2를 이용하여 실행합니다.
+- 문서 ID: 공지사항 본래의 주소에서 `/`를 `_`로 변환하여 저장합니다.
+- title: 공지사항 제목이 들어갑니다.
+- writtenAt: 글 쓴 날짜
+- writtenBy: 글쓴이
+- boardId: 게시판 ID
 
-```
-$ pm2 start index.js --name farmer_cat
-```
+## 크롤링 타입
 
-## 그 외
+도서관 홈페이지와 일반 공지 홈페이지의 구조가 다르며, 리뉴얼 등의 이유로
+언제든지 구조가 바뀔 수 있기 때문에 크롤링 타입으로 이를 구분합니다.
 
-- [wiki](https://github.com/catstones/farmer_cat/wiki)
-- 이슈 참고
+- renewal2019: 2019년에 리뉴얼 된 가톨릭대학교 홈페이지

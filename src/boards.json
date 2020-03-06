@@ -1,0 +1,27 @@
+[
+  {
+    "title": "공지사항 - 일반",
+    "type": "renewal2019",
+    "url": "https://www.catholic.ac.kr/front/boardlist.do?cmsDirPkid=2053&cmsLocalPkid=1"
+  },
+  {
+    "title": "공지사항 - 학사",
+    "type": "renewal2019",
+    "url": "https://www.catholic.ac.kr/front/boardlist.do?cmsDirPkid=2053&cmsLocalPkid=2"
+  },
+  {
+    "title": "공지사항 - 장학",
+    "type": "renewal2019",
+    "url": "https://www.catholic.ac.kr/front/boardlist.do?cmsDirPkid=2053&cmsLocalPkid=3"
+  },
+  {
+    "title": "공지사항 - 취업",
+    "type": "renewal2019",
+    "url": "https://www.catholic.ac.kr/front/boardlist.do?cmsDirPkid=2053&cmsLocalPkid=4"
+  },
+  {
+    "title": "컴퓨터정보공학부",
+    "type": "renewal2019",
+    "url": "https://csie.catholic.ac.kr/front/boardlist.do?cmsDirPkid=1052&cmsLocalPkid=0"
+  }
+]

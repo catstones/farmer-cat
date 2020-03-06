@@ -1,8 +1,7 @@
-# firebase admin key file
-config/firebaseAccountKey.json
-
-# npm
+# yarn
 node_modules
 
 # macOS
 .DS_Store
+
+firebase.json
