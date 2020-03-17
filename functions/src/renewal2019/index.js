@@ -2,7 +2,7 @@ const cheerio = require("cheerio");
 const fetch = require("node-fetch");
 const Notice = require("../notice");
 const Board = require("../board");
-
+const URL = require("url").URL;
 /**
  * 정규화된 공지 url을 반환합니다.
  *
