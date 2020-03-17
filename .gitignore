@@ -1,7 +1,12 @@
 # yarn
 node_modules
+./functions/node_modules
 
 # macOS
 .DS_Store
 
+#Firebase
 firebase.json
+firebase-admin.json
+./functions/firebase.json
+./functions/firebase-admin.json
